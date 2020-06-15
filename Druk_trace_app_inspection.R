@@ -9,7 +9,7 @@ library(gganimate)
 library(ggrepel)
 
 # DATA IMPORT --------------------------------------------------------------
-file_list <- read_csv("file_list.csv")
+file_list <- read_csv("backup_csv/file_list.csv")
 
 my_col_names <- c("Sl.No.", "Date", "Taxi_number", "DL_number", "QR_displayed",
                   "Log_book", "Inspection_location", "Updated_by", "Loc_name")
@@ -122,9 +122,9 @@ colnames(file_7) <- my_col_names
 
 file_7 <- file_7 %>%
     mutate(loc_name = file_list$Loc_name[7]) %>% 
-    select(-Sl.No.) %>% 
+    select(-Sl.No.) %>%
     filter(!is.na(Taxi_number)) %>% 
-    mutate(Date = as.Date(Date, "%d/%m/%Y")) %>% 
+    mutate(Date = as.Date(Date, "%d-%B-%Y")) %>% 
     mutate(Taxi_number = as.character(Taxi_number)) %>% 
     mutate(DL_number = as.character(DL_number)) %>% 
     mutate(QR_displayed = as.character(QR_displayed)) %>% 
@@ -393,7 +393,7 @@ druk_trace_master <- druk_trace_master %>%
     mutate(QR_displayed = ifelse(QR_displayed == "no", "NO", QR_displayed)) %>% 
     mutate(QR_displayed = ifelse(QR_displayed == "No", "NO", QR_displayed))
 
-WriteXLS(druk_trace_master, paste(Sys.Date(), "daily_backup.xlsx", sep = "_"))
+WriteXLS(druk_trace_master, paste("excel_output/", paste(Sys.Date(), "daily_backup.xlsx", sep = "_"), sep = ""))
 
 druk_trace_master %>% 
     filter(is.na(QR_displayed))
@@ -421,9 +421,17 @@ druk_trace_grouped %>%
           plot.subtitle = element_text(size = 13, family = "Times", hjust = 0.5),
           plot.caption = element_text(size = 10, family = "Times", hjust = 0.95))
 
-ggsave(paste(Sys.Date(),"Druk trace inspection detail.jpg", sep = " "), width = 25, height = 15, units = "cm")
+ggsave(paste("image_output/", 
+             paste(Sys.Date(),
+                   "Druk trace inspection detail.jpg", 
+                   sep = "_"),
+             sep = ""), width = 25, height = 15, units = "cm")
 
-write_csv(druk_trace_grouped, paste(Sys.Date(), "master_file.csv", sep = "_"))
+write_csv(druk_trace_grouped, paste("excel_output/", 
+                                    paste(Sys.Date(), "master_file.csv", 
+                                          sep = "_"),
+                                    sep = "")
+          )
 
 # Daily progress ----------------------------------------------------------
 
