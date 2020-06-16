@@ -439,7 +439,7 @@ list_1 <- file_list$Loc_name
 list_2 <- druk_trace_grouped$loc_name
 (insp_not_conducted <- list_1[!(list_1 %in% list_2)])
 
-daily_summary <- read_csv("daily_summary.csv")
+daily_summary <- read_csv("backup_csv/daily_summary.csv")
 glimpse(daily_summary)
 
 today_summary <- tibble(date = Sys.Date(),
@@ -450,9 +450,9 @@ daily_summary <- rbind(daily_summary, today_summary)
 daily_summary <- daily_summary %>% 
     mutate(date = as.POSIXct(date))
 
-write_csv(daily_summary, "daily_summary.csv")
+write_csv(daily_summary, "backup_csv/daily_summary.csv")
 
-WriteXLS::WriteXLS(daily_summary, "daily_summary.xlsx")
+WriteXLS::WriteXLS(daily_summary, "excel_output/daily_summary.xlsx")
 
 glimpse(daily_summary)
 
@@ -495,10 +495,13 @@ daily_DT %>%
     theme(axis.text = element_text(size = 10, family = "Times"),
           axis.title = element_text(size = 12, family = "Times"),
           plot.title = element_text(size = 14, family = "Times", face = "bold", hjust = 0.5)) 
-ggsave(paste(Sys.Date(), "Druk_Trace_Overview.jpg", sep = "_"), width = 25, height = 15, units = "cm")
+ggsave(paste("image_output/", 
+             paste(Sys.Date(), "Druk_Trace_Overview.jpg", sep = "_"),
+             sep = ""),
+             width = 25, height = 15, units = "cm")
 
 # Animation ---------------------------------------------------------------
-daily_summary <- read_csv("daily_summary.csv")
+daily_summary <- read_csv("backup_csv/daily_summary.csv")
 
 animate_plot <- daily_summary %>% 
     ggplot(aes(x = date, y = total_taxis_insp)) +
